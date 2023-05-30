@@ -1,0 +1,106 @@
+Microsoft (R) Macro Assembler Version 6.15.8803		    11/24/22 11:52:39
+lab2							     Page 1 - 1
+
+
+				TITLE lab2
+ = 000A				N =10
+
+				.386
+ 00000000			dseg segment para public 'data'
+
+ 00000000 64 C7 0C 2D 02	P1 DB 100,-57,12,45,2 
+ 00000005 FFFFFF01		P2 DD -255
+ 00000009 28 1E			P3 DB  4*8+16/2,N*3         
+ 0000000B 31 32 20 74 61	P4 DB  "12 tango" 
+	   6E 67 6F
+ 00000013 0078 F1FA 4DCF	P5 DW 78H,0F1FAH,4DCFH,000FH,-1A38H  
+	   000F E5C8
+ 0000001D 00002566		P6 DD 9574, -9574
+	   FFFFDA9A
+
+
+ 0025				dseg ends
+ 00000000			sseg segment para stack 'stack'
+ 00000000  00000040 [		    dw 64 dup(?)
+	    0000
+	   ]
+ 0080				sseg ends
+ 00000000			cseg segment para public 'code'
+ 00000000			_main proc far
+				    assume ds:dseg, cs:cseg, ss:sseg
+
+ 00000000  1E			    push ds
+ 00000001  66| 2B C0		    sub ax,ax
+ 00000004  66| 50		    push ax
+				   
+ 00000006  66| 8B C1		    MOV AX, CX	;1) PW,PW 
+					;MOV ES,DS			
+ 00000009  66| 8C D8				MOV AX, DS	;2) PS,PW 
+ 0000000C  66| 8E C0				MOV ES, AX
+ 0000000F  C7 05 00000005 R		MOV P2,40	;3) П,HC
+	   00000028
+ 00000019  A3 00000005 R	    MOV P2,EAX	;4) П,PW 
+					
+					;MOV ES,[EBX]
+ 0000001E  BB 00000019 R		MOV EBX, offset P5+6 	;5) PS,KP 
+					
+ 00000023  66| 8B 03				mov AX,[EBX]
+						;mov ES, AX  проблеми з сегментом ES
+				    	
+ 00000026  66| 8C D8			MOV AX, DS	;6) PW,PS
+						
+				   
+				   
+				;	MOV	CX, -17H
+				;	MOV	P3,-17
+				;	MOV	AL, CL
+				;;MOV ES, DS
+				;	MOV AX, DS
+				;	MOV ES, AX
+				;	
+				;	MOV AL, P5
+				;        LEA ESI, P5
+				;        mov BL, [ESI]
+				;	MOV P6, "V"
+				;	MOV P6, 'a'
+				;	MOV P6, 250
+ 00000029  CB				ret
+ 0000002A			_main ENDP
+ 002A				cseg	ends
+					END _main
+Microsoft (R) Macro Assembler Version 6.15.8803		    11/24/22 11:52:39
+lab2							     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+cseg . . . . . . . . . . . . . .	32 Bit	 002A	  Para	  Public  'CODE'	
+dseg . . . . . . . . . . . . . .	32 Bit	 0025	  Para	  Public  'DATA'	
+sseg . . . . . . . . . . . . . .	32 Bit	 0080	  Para	  Stack	  'STACK'	 
+
+
+Procedures,  parameters and locals:
+
+                N a m e                 Type     Value    Attr
+
+_main  . . . . . . . . . . . . .	P Far	 0000	  cseg	Length= 002A Public
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+N  . . . . . . . . . . . . . . .	Number	 000Ah	 
+P1 . . . . . . . . . . . . . . .	Byte	 0000	  dseg	
+P2 . . . . . . . . . . . . . . .	DWord	 0005	  dseg	
+P3 . . . . . . . . . . . . . . .	Byte	 0009	  dseg	
+P4 . . . . . . . . . . . . . . .	Byte	 000B	  dseg	
+P5 . . . . . . . . . . . . . . .	Word	 0013	  dseg	
+P6 . . . . . . . . . . . . . . .	DWord	 001D	  dseg	
+
+	   0 Warnings
+	   0 Errors

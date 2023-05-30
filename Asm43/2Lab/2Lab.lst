@@ -1,0 +1,125 @@
+Microsoft (R) Macro Assembler Version 6.15.8803		    12/08/22 11:57:56
+lab2							     Page 1 - 1
+
+
+				; Гудимов Денис ПЗ-21-2 варіант 24
+				; Обчислити значення виразу:
+				; y=(x^3+a^3)/(8b+1) + (ax^3)/(3)-ax
+
+				TITLE lab2
+
+
+				.386
+ 00000000			dseg segment para public 'data'
+
+ 00000000 FC				a DB -4
+ 00000001 06				b DB 6
+ 00000002 02				d DB 2
+ 00000003 FFFD				x DW -3
+ 00000005 0000				y DW 0
+
+
+
+ 0007				dseg ends
+ 00000000			sseg segment para stack 'stack'
+ 00000000  00000040 [		    dw 64 dup(?)
+	    0000
+	   ]
+ 0080				sseg ends
+ 00000000			cseg segment para public 'code'
+ 00000000			_main proc far
+				    assume ds:dseg, cs:cseg, ss:sseg
+
+ 00000000  1E			    push ds
+ 00000001  66| 2B C0		    sub ax,ax
+ 00000004  66| 50		    push ax
+				   ;8b+1
+ 00000006  B0 08		   mov al,8 	;al=8
+ 00000008  F6 2D 00000001 R	   imul b  		;ax=8*6=48
+ 0000000E  66| 40		   inc ax 		;ax=48+1=49
+ 00000010  66| 8B D8		   mov bx ,ax 	;bx=49
+				   ;x^3+a^3
+ 00000013  66| A1		   mov ax,x 	;ax= -3
+	   00000003 R
+ 00000019  66| F7 2D		   imul x		;dx:ax=x*x=9
+	   00000003 R
+ 00000020  66| F7 2D		   imul x		;dx:ax=x*x*x=-27
+	   00000003 R
+ 00000027  66| A3		   mov y,ax 	;y=-27
+	   00000005 R
+				 
+ 0000002D  A0 00000000 R	   mov al,a 	;al= -4
+ 00000032  66| 98		   cbw			;ax= -4
+ 00000034  66| 8B C8		   mov cx, ax
+ 00000037  A0 00000000 R	   mov al, a
+ 0000003C  F6 E8		   imul al		;dx:ax=a*a=16
+ 0000003E  66| F7 E9		   imul cx	;dx:ax=a*a*a=-64
+
+				   ;(x^3+a^3)/(8b+1)
+ 00000041  66| 03 05		   add ax,y		;y=(-27)+(-64)=-91
+	   00000005 R
+ 00000048  66| 99		   cwd
+ 0000004A  66| F7 FB		   idiv bx		;-91/49 ax=-1,dx=13
+				   ;ax^3
+ 0000004D  66| A3		   mov y,ax  	;y=-1	
+	   00000005 R
+				   
+ 00000053  A0 00000000 R	   mov al,a 	;al= -4
+ 00000058  66| 98		   cbw			;ax= -4
+ 0000005A  66| F7 2D		   imul x		;dx:ax=a*x=12
+	   00000003 R
+ 00000061  66| F7 2D		   imul x		;dx:ax=a*x*x=-36
+	   00000003 R
+ 00000068  66| BB 0003		   mov bx,3		;bx=3
+				   ;(ax^3)/(3)
+ 0000006C  66| F7 FB		   idiv bx		;-36/3 ax=-12 dx=0
+ 0000006F  66| 01 05		   add y,ax		;y=-1+(-12)=-13
+	   00000005 R
+				   ;ax
+ 00000076  A0 00000000 R	   mov al,a		;al=-4
+ 0000007B  66| 98		   cbw			;ax=-4
+ 0000007D  66| F7 2D		   imul	x		;dx:ax=a*x=12
+	   00000003 R
+				   ;(x^3+a^3)/(8b+1) + (ax^3)/(3)-ax
+ 00000084  66| 29 05		   sub y,ax		;y=(-13)-12=-25
+	   00000005 R
+				   
+				   
+ 0000008B  CB				ret
+ 0000008C			_main ENDP
+ 008C				cseg	ends
+					END _main
+Microsoft (R) Macro Assembler Version 6.15.8803		    12/08/22 11:57:56
+lab2							     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+cseg . . . . . . . . . . . . . .	32 Bit	 008C	  Para	  Public  'CODE'	
+dseg . . . . . . . . . . . . . .	32 Bit	 0007	  Para	  Public  'DATA'	
+sseg . . . . . . . . . . . . . .	32 Bit	 0080	  Para	  Stack	  'STACK'	 
+
+
+Procedures,  parameters and locals:
+
+                N a m e                 Type     Value    Attr
+
+_main  . . . . . . . . . . . . .	P Far	 0000	  cseg	Length= 008C Public
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+a  . . . . . . . . . . . . . . .	Byte	 0000	  dseg	
+b  . . . . . . . . . . . . . . .	Byte	 0001	  dseg	
+d  . . . . . . . . . . . . . . .	Byte	 0002	  dseg	
+x  . . . . . . . . . . . . . . .	Word	 0003	  dseg	
+y  . . . . . . . . . . . . . . .	Word	 0005	  dseg	
+
+	   0 Warnings
+	   0 Errors

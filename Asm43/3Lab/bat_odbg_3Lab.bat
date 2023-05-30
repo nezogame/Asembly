@@ -1,0 +1,1 @@
+C:\Users\denyss\source\repos\2_Course\ASM\odbg201\ollydbg.exe 3Lab2.exe
